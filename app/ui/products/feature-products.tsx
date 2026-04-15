@@ -1,14 +1,7 @@
 'use client';
+import { Product } from '@/app/products/[id]/page';
 import Image from 'next/image';
 import Link from 'next/link';
-
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    images: string[];
-    slug: string;
-}
 
 export interface ProductsResponse {
     success?: boolean;
@@ -22,7 +15,6 @@ export default function FeaturedProducts({ data }: ProductsResponse) {
     if (!products || products.length === 0) {
         return "Products not found, please try again later.";
     }
-    console.log("Rendering FeaturedProducts with data:", products);
 
     return (
         <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto font-sans">

@@ -1,8 +1,20 @@
+import { Suspense } from 'react';
+import { Search } from '../ui/products/search';
+
+// Since SearchClient uses `useSearchParams`, it must be wrapped in a React Suspense 
+// boundary so Next.js can safely render the page boundary on the server.
 export default function SearchPage() {
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <h1 className="text-4xl font-bold mb-6">Search Page</h1>
-      <p className="text-lg text-gray-600">This is where the search functionality will be implemented.</p>
-    </div>
+    <main className="min-h-screen bg-white">
+      <Suspense 
+        fallback={
+          <div className="w-full max-w-7xl mx-auto px-4 py-12 flex justify-center text-gray-500">
+            <div className="animate-pulse font-medium text-lg">Loading Search Interface...</div>
+          </div>
+        }
+      >
+        <Search />
+      </Suspense>
+    </main>
   );
 }

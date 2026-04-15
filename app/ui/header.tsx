@@ -1,10 +1,19 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useCart } from '../context/Cart/CartProvider';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
   const pathname = usePathname();
-  const cartCount = 2; // Simulated cart count, this would come from state
+  const { cart, token } = useCart();
+  const [cartItemCount, setCartItemCount] = useState(0);  
+
+    useEffect(() => {
+      if (cart && token) {
+        setCartItemCount(cart.totalItems);
+      }
+    }, [token, cart]);
 
   return (
     <header className="sticky top-0 z-50">
@@ -43,10 +52,8 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Right: Actions (Cart) */}
         <div className="relative">
           <Link href="/cart" className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-lavender-200 transition-colors">
-            {/* Minimalist Cart/Shopping Bag Icon */}
             <svg 
               className="w-7 h-7 stroke-black" 
               fill="none" 
@@ -56,10 +63,9 @@ export default function Header() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             
-            {/* Cart Badge with Count */}
-            {cartCount > 0 && (
+            {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1.5 bg-black text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                {cartCount}
+                {cartItemCount}
               </span>
             )}
           </Link>

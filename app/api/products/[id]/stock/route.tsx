@@ -8,7 +8,7 @@ export async function GET(
   const bypassToken = process.env.VERCEL_PROTECTION_BYPASS; 
 
   try {
-    const response = await fetch(`https://vercel-swag-store-api.vercel.app/api/products/${id}`, {
+    const response = await fetch(`https://vercel-swag-store-api.vercel.app/api/products/${id}/stock`, {
       headers: {
         'x-vercel-protection-bypass': bypassToken || '',
         'Content-Type': 'application/json'

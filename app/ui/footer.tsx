@@ -25,12 +25,6 @@ export default function Footer() {
 
         {/* Center/Right Section: Links and Copyright */}
         <div className="flex flex-col items-center md:items-end gap-3">
-          <nav className="flex gap-6 text-sm font-medium text-gray-600">
-            <Link href="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-black transition-colors">Terms of Service</Link>
-            <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
-          </nav>
-          
           <div className="text-sm text-gray-500 font-medium">
             © {currentYear} Swag Store. All rights reserved.
           </div>
