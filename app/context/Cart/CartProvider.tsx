@@ -1,6 +1,6 @@
 'use client';
-import { Product } from '@/app/products/[id]/page';
 import { addToExistingCart, createCart, fetchExistingCart, removeFromCart, updateCartItemQuantity } from '@/app/services/cartService';
+import { Product } from '@/app/ui/products/product';
 import { createContext, useContext, useState, useEffect, useCallback, SetStateAction, Dispatch } from 'react';
 
 const CART_TOKEN_KEY = 'app_cart_token';
@@ -68,14 +68,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(true);
         try {
             if (token) {
-                console.log("Cart token found, add to existing cart...");
                 const cartdata = await addToExistingCart(productId, quantity, token);
                 setCart(cartdata);
                 return { success: true };
             }
             else {
                 const cartToken = await createCart();
-                console.log("Cart token not found, creating cart...");
                 if (cartToken?.token && !token) {
                     setToken(cartToken?.token || null);
                     window.sessionStorage.setItem(CART_TOKEN_KEY, cartToken?.token);

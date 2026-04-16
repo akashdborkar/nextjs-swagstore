@@ -5,7 +5,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto">
-      <div className="bg-[#ddbbed] px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-[#ddbbed] px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="flex items-center gap-3">

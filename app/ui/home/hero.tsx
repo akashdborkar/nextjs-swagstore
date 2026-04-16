@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import swagimg from '../../public/swag_store.webp';
+import swagimg from '../../../public/swag_store.webp';
 import Image from 'next/image';
 
 export default function Hero() {

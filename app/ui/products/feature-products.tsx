@@ -1,7 +1,6 @@
-'use client';
-import { Product } from '@/app/products/[id]/page';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Product } from './product';
 
 export interface ProductsResponse {
     success?: boolean;
@@ -9,8 +8,19 @@ export interface ProductsResponse {
     meta?: any;
 }
 
-export default function FeaturedProducts({ data }: ProductsResponse) {
-    const products = Array.isArray(data) ? data : [];
+  const fetchProducts = async (): Promise<ProductsResponse> => {
+
+    const response = await fetch('https://vercel-swag-store-api.vercel.app/api/products?page=1&limit=6', {
+      headers: { 'x-vercel-protection-bypass': process.env.VERCEL_SECRET_TOKEN || '' },
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
+    return response.json();
+  };
+
+  const featureProducts = await fetchProducts();
+
+export default function FeaturedProducts() {
+    const products = Array.isArray(featureProducts.data) ? featureProducts.data : [];
 
     if (!products || products.length === 0) {
         return "Products not found, please try again later.";
@@ -59,11 +69,6 @@ export default function FeaturedProducts({ data }: ProductsResponse) {
                                 <span className="text-xl font-light text-gray-900">
                                     ${product.price.toFixed(2)}
                                 </span>
-                                <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 shadow-lg">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                    </svg>
-                                </div>
                             </div>
                         </div>
                     </a>

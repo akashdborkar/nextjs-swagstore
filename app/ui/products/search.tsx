@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Product } from '@/app/products/[id]/page';
+import { Product } from './product';
 
 export function Search() {
   const router = useRouter();
@@ -126,7 +126,7 @@ export function Search() {
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCat = e.target.value;
     setCategory(newCat);
-    updateUrlParams(inputValue, newCat);
+    updateUrlParams("", newCat);
   };
 
   const handleSubmit = (e: React.SubmitEvent) => {

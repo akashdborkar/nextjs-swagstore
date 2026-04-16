@@ -13,14 +13,15 @@ export async function GET(request: Request) {
   try {
     const targetUrl = new URL('https://vercel-swag-store-api.vercel.app/api/products');
     targetUrl.searchParams.set('page', '1');
-    targetUrl.searchParams.set('limit', limit);
+
 
     if (search.trim()) {
       targetUrl.searchParams.set('search', search.trim());
+      targetUrl.searchParams.set('limit', limit);
       if (featured) targetUrl.searchParams.set('featured', featured);
     }
-    if (category && category !== 'all') targetUrl.searchParams.set('category', category);
 
+    if (category && category !== 'all') targetUrl.searchParams.set('category', category);
 
     const response = await fetch(targetUrl.toString(), {
       headers: {
