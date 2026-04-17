@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from './product';
+import { Product } from '../types';
 
 export interface ProductsResponse {
     success?: boolean;
@@ -43,7 +43,7 @@ export default function FeaturedProducts() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product) => (
-                    <a
+                    <Link
                         key={product.id}
                         href={`/products/${product.id}`}
                         className="group flex flex-col bg-white rounded-3xl border border-gray-100 hover:border-[#E6E6FA] hover:shadow-2xl hover:shadow-[#E6E6FA]/40 transition-all duration-500 overflow-hidden"
@@ -71,7 +71,7 @@ export default function FeaturedProducts() {
                                 </span>
                             </div>
                         </div>
-                    </a>
+                    </Link>
                 ))}
             </div>
         </section>

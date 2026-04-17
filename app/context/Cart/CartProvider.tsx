@@ -1,28 +1,9 @@
 'use client';
 import { addToExistingCart, createCart, fetchExistingCart, removeFromCart, updateCartItemQuantity } from '@/app/services/cartService';
-import { Product } from '@/app/ui/products/product';
+import { CartModel, Product } from '@/app/ui/types';
 import { createContext, useContext, useState, useEffect, useCallback, SetStateAction, Dispatch } from 'react';
 
 const CART_TOKEN_KEY = 'app_cart_token';
-
-interface CartItem {
-    addedAt: string;
-    lineTotal: number;
-    product: Product;
-    price: number;
-    quantity: number;
-    totalPrice: number;
-}
-
-export interface CartModel {
-    createdAt: string;
-    currency: string;
-    items: CartItem[];
-    subtotal: number;
-    token: string;
-    totalItems: number;
-    updatedAt: string;
-}
 
 const CartContext = createContext<CartProviderProps | undefined>(undefined);
 export interface CartProviderProps {
@@ -35,7 +16,6 @@ export interface CartProviderProps {
     updateQuantity(itemId: string, quantity: number): void;
     removeItem(itemId: string): void;
 }
-
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cart, setCart] = useState<CartModel | undefined>(undefined);

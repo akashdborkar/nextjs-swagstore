@@ -12,7 +12,7 @@ export async function GET(request: Request) {
                 'Content-Type': 'application/json'
             },
             // Cache the result for 60 seconds to reduce load and improve performance
-            next: { revalidate: 60 }
+            next: { revalidate: 300 }
         });
 
         if (!response.ok) {

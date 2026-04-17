@@ -10,16 +10,16 @@ export default function Header() {
   const [cartItemCount, setCartItemCount] = useState(0);
 
   // Initial fetch on mount or when token becomes available
-  useEffect(() => { 
+  useEffect(() => {
     if (token) {
       fetchCart();
     }
-  }, [token]); 
+  }, [token]);
 
   // Keep the local count state in sync with the cart object from context
   useEffect(() => {
     if (cart) {
-      setCartItemCount(cart.totalItems || 0);
+      setCartItemCount(cart?.totalItems);
     } else {
       setCartItemCount(0);
     }
@@ -37,7 +37,7 @@ export default function Header() {
       <div className="bg-[#ddbbed] px-6 py-3 flex items-center justify-between">
 
         <div className="flex items-center gap-12">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-1">
             <div className="w-8 h-8 flex items-center justify-center">
               <svg
                 viewBox="0 0 100 100"
@@ -47,31 +47,25 @@ export default function Header() {
                 <polygon points="50,15 15,85 85,85" />
               </svg>
             </div>
-
             <span className="text-xl font-bold text-black tracking-tight">Swag Store</span>
           </Link>
 
           <nav className="flex items-center gap-8">
-            <Link
-              href="/"
-              className={`text-lg transition-colors hover:text-black 
-                ${pathname === '/' ? 'text-black font-semibold' : 'text-gray-600'}`}
-            >
-              Home
+            <Link href="/" className={`text-lg transition-colors hover:text-black 
+              ${pathname === '/' ? 'text-black font-semibold' : 'text-gray-600'}`}
+            >Home
             </Link>
             <Link
-              href="/search"
-              className={`text-lg transition-colors hover:text-black 
+              href="/search" className={`text-lg transition-colors hover:text-black 
                 ${pathname === '/search' ? 'text-black font-semibold' : 'text-gray-600'}`}
-            >
-              Search
+            >Search
             </Link>
           </nav>
         </div>
 
         <div className="relative">
-          <Link 
-            href="/cart" 
+          <Link
+            href="/cart"
             onClick={handleCartClick}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#c9a7db] transition-colors"
           >

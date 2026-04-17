@@ -1,234 +1,166 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
-import Image from 'next/image';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Product } from './product';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { CategorySelector } from "./category-selector";
+import { ProductCard } from "./product-card";
+import { Product } from "../types";
 
 export function Search() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const initialQuery = searchParams.get('search') || '';
-  const initialCategory = searchParams.get('category') || 'all';
+  // Extract current values directly from URL
+  const query = searchParams.get('search') || '';
+  const category = searchParams.get('category') || 'all';
 
-  interface Category {
-    slug: string;
-    name: string;
-    productCount: number;
-  }
-
-  const [inputValue, setInputValue] = useState(initialQuery);
-  const [category, setCategory] = useState(initialCategory);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [inputValue, setInputValue] = useState(query);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchProducts = useCallback(async (query: string, cat: string) => {
+  // Sync internal input field if URL changes (e.g. back button)
+  useEffect(() => {
+    setInputValue(query);
+  }, [query]);
+
+  const updateParams = useCallback((newQuery: string, newCategory: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (newQuery.trim()) {
+      params.set('search', newQuery.trim());
+    } else {
+      params.delete('search');
+    }
+
+    if (newCategory !== 'all') {
+      params.set('category', newCategory);
+    } else {
+      params.delete('category');
+    }
+
+    // router.push updates the URL and triggers a re-render of this component
+    router.push(`${pathname}?${params.toString()}`);
+  }, [pathname, router, searchParams]);
+
+  const fetchProducts = useCallback(async (q: string, cat: string) => {
     setLoading(true);
     setError(null);
 
     try {
       const apiParams = new URLSearchParams();
-      // Set 5 result limit as requested
-      apiParams.set('limit', '5');
-      if (query.trim()) apiParams.set('search', query.trim());
+      if (q.trim()) {
+        apiParams.set('search', q.trim());
+        apiParams.set('limit', '5');
+      }
       if (cat !== 'all') apiParams.set('category', cat);
-
-      // If no query, we show featured items as the default state
-      if (!query.trim()) apiParams.set('featured', 'true');
+      if (!q.trim() && cat === 'all') apiParams.set('featured', 'true');
 
       const response = await fetch(`/api/search?${apiParams.toString()}`);
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} failed to fetch results`);
-      }
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
 
       const json = await response.json();
-
-      if (json.success && Array.isArray(json.data)) {
-        setProducts(json.data);
-      } else {
-        setProducts([]);
-      }
-    } catch (err: any) {
+      setProducts(json.success && Array.isArray(json.data) ? json.data : []);
+    } catch (err) {
       setError("Unable to load products. Please try again.");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const fetchCategories = useCallback(async () => {
-    setLoadingCategories(true);
-    try {
-
-      const response = await fetch(`/api/categories`);
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} failed to fetch categories`);
-      }
-
-      const json = await response.json();
-
-      if (json.success) {
-        setCategories(json.data);
-      }
-    } catch (err) {
-      setError("Unable to load categories.");
-    } finally {
-      setLoadingCategories(false);
-    }
-  }, []);
-
-  // Initial Load
+  // Effect runs whenever the URL params change
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  // Sync data whenever URL parameters change
-  useEffect(() => {
-    fetchProducts(initialQuery, initialCategory);
-    setInputValue(initialQuery);
-    setCategory(initialCategory);
-  }, [initialQuery, initialCategory, fetchProducts]);
-
-  // Update the browser URL (triggers the useEffect above)
-  const updateUrlParams = (newQuery: string, newCategory: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (newQuery.trim()) params.set('search', newQuery.trim());
-    else params.delete('search');
-
-    if (newCategory !== 'all') params.set('category', newCategory);
-    else params.delete('category');
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+    fetchProducts(query, category);
+  }, [query, category, fetchProducts]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setInputValue(val);
 
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-
-    // Automatic search after 3 characters OR if cleared
-    if (val.trim().length >= 3 || val.trim().length === 0) {
-      debounceTimerRef.current = setTimeout(() => {
-        updateUrlParams(val, category);
-      }, 400);
-    }
+    
+    // Debounce the URL update
+    debounceTimerRef.current = setTimeout(() => {
+      updateParams(val, category);
+    }, 400);
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCat = e.target.value;
-    setCategory(newCat);
-    updateUrlParams("", newCat);
-  };
-
-  const handleSubmit = (e: React.SubmitEvent) => {
-    e.preventDefault();
-    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-    updateUrlParams(inputValue, category);
+  const handleCategoryChange = (newCat: string) => {
+    // When changing category, we often want to clear the search query or keep it
+    updateParams("", newCat);
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12 font-sans">
-      <header className="mb-12">
-        <h1 className="text-4xl font-black uppercase italic tracking-tighter mb-8">
-          Swag Search
-        </h1>
+    <div className="w-full max-w-7xl mx-auto px-6 py-12 font-sans antialiased text-black bg-white min-h-screen">
+      <header className="mb-16">
+        <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter mb-10 leading-none">
+          Search our collection...
+        </h3>
 
-        {/* Search Controls */}
-        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
+        <form 
+          onSubmit={(e) => { 
+            e.preventDefault(); 
+            updateParams(inputValue, category); 
+          }}
+          className="flex flex-col lg:flex-row gap-4 items-stretch"
+        >
+          <div className="relative flex-[2]">
             <input
               type="text"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Search for apparel, bottles, etc..."
-              className="w-full p-4 pl-6 bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white rounded-2xl outline-none transition-all font-medium"
+              placeholder="Search our collection..."
+              className="w-full p-5 md:p-6 pl-8 bg-zinc-50 border-2 border-transparent focus:border-black focus:bg-white rounded-2xl md:rounded-3xl outline-none transition-all font-bold text-sm md:text-base placeholder:text-zinc-400"
             />
           </div>
 
-          <div className="flex-1 relative">
-            <select
-              value={category}
-              onChange={handleCategoryChange}
-              disabled={loadingCategories}
-              className="w-full p-6 px-10 bg-zinc-100 border-2 border-transparent focus:border-black rounded-3xl font-black uppercase tracking-widest text-xs outline-none cursor-pointer appearance-none disabled:opacity-50"
-            >
-              <option value="all">{loadingCategories ? 'Loading...' : 'All Categories'}</option>
-              {!loadingCategories && categories.map((cat) => (
-                <option key={cat.slug} value={cat.slug}>
-                  {cat.name} ({cat.productCount})
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
-            </div>
-          </div>
+          <CategorySelector
+            currentCategory={category}
+            onCategoryChangeAction={handleCategoryChange}
+          />
 
           <button
             type="submit"
-            className="p-4 px-10 bg-black text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="p-5 md:p-6 px-12 bg-black text-white rounded-2xl md:rounded-3xl font-black uppercase tracking-widest text-[10px] md:text-xs hover:bg-zinc-800 active:scale-[0.98] transition-all shadow-xl shadow-black/5"
           >
             Search
           </button>
         </form>
       </header>
 
-      {/* Results Area */}
       <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-gray-400">
-            {loading ? 'Searching...' : `${products.length} Results Found`}
-          </h2>
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-100">
+          <div className="flex items-center gap-3">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">
+              Inventory Status
+            </h2>
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-200"></span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-black">
+              {loading ? 'Processing...' : `${products.length} Units Found for "${query === '' ? category : query}"`}
+            </span>
+          </div>
           {loading && (
-            <div className="w-5 h-5 border-2 border-gray-200 border-t-black rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-zinc-200 border-t-black rounded-full animate-spin" />
           )}
         </div>
 
-        {error && (
-          <div className="p-8 bg-red-50 rounded-3xl text-red-600 font-bold text-center">
+        {error ? (
+          <div className="p-12 bg-red-50 rounded-[2rem] text-red-600 font-bold text-center border border-red-100">
             {error}
           </div>
-        )}
-
-        {!loading && products.length === 0 && (
-          <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-[3rem]">
-            <p className="text-gray-400 font-medium italic">No matches found for your search.</p>
+        ) : !loading && products.length === 0 ? (
+          <div className="py-32 text-center border-2 border-dashed border-zinc-100 rounded-[3rem] bg-zinc-50/30">
+            <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] italic">No matches found in current catalog.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {products.map((product) => (
-            <a
-              key={product.id}
-              href={`/products/${product.slug}`}
-              className="group flex flex-col bg-white rounded-3xl border border-gray-50 hover:border-black transition-all duration-300 overflow-hidden"
-            >
-              <div className="relative aspect-square bg-gray-50 overflow-hidden">
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
-                  loading="eager"
-                />
-              </div>
-              <div className="p-5">
-                <h3 className="font-bold text-gray-900 group-hover:underline line-clamp-1">{product.name}</h3>
-                <p className="text-sm text-gray-500 mt-1">${(product.price).toFixed(2)}</p>
-              </div>
-            </a>
-          ))}
-        </div>
       </section>
     </div>
   );

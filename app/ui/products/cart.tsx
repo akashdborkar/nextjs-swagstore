@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Loader2, Link } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
 import { useCart } from '@/app/context/Cart/CartProvider';
+import Image from 'next/image';
 
 export function CartClient() {
   const { cart, loading, updateQuantity, removeItem, token, fetchCart } = useCart();
@@ -94,17 +95,18 @@ export function CartClient() {
               className={`flex flex-col sm:flex-row gap-8 pb-10 border-b border-zinc-100 last:border-0 group transition-opacity ${isUpdating ? 'opacity-50' : 'opacity-100'}`}
             >
               <div className="w-full sm:w-40 h-48 sm:h-48 bg-zinc-50 border border-zinc-100 rounded-3xl overflow-hidden flex-shrink-0 relative">
-                <img 
-                  src={item.product.images?.[0]} 
-                  alt={item.product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
+                <Image src={item.product.images?.[0]} 
+                alt={item.product.name} 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                 />
               </div>
 
               <div className="flex-grow flex flex-col py-2">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900 leading-none">
-                    {item.product.name}
+                    {item.product.name} 
                   </h3>
                   <button 
                     onClick={() => handleRemoveItem(item.product.id)}
@@ -117,6 +119,9 @@ export function CartClient() {
                 
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-auto mt-1">
                   {item.product.category || 'Limited Edition'}
+                </p>
+                <p className="text-1xl font-black text-black tabular-nums">
+                  Per Unit ${item.product.price.toFixed(2)}
                 </p>
 
                 <div className="flex flex-wrap justify-between items-end gap-4 mt-8">
