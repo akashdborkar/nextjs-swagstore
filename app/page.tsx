@@ -1,7 +1,8 @@
 import Hero from "./ui/home/hero";
-import FeaturedProducts, { ProductsResponse } from "./ui/products/feature-products";
+import FeaturedProducts from "./ui/products/feature-products";
 import { Metadata } from "next";
 import PromoBanner from "./ui/home/promobanner";
+import { Suspense } from "react";
 
 const title = 'Swag Store | Home';
 const description = 'Welcome to the Swag Store! Discover our exclusive collection. From stylish apparel to unique accessories, find the perfect swag.';
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <PromoBanner />
+      <Suspense fallback={<p>Fetching latest promotion...</p>}>
+        <PromoBanner />
+      </Suspense>
       <Hero />
       <FeaturedProducts />
     </>

@@ -30,7 +30,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
-    // Fetch full cart data
+    // Fetch cart data
     const fetchCart = async () => {
         if (!token) return;
         try {
@@ -43,7 +43,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    // The Core "Add to Cart" Logic
+    //"Add to Cart" Logic
     const addToCart = useCallback(async (productId: string, quantity = 1): Promise<{ success: boolean; error?: any }> => {
         setLoading(true);
         try {
@@ -53,6 +53,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 return { success: true };
             }
             else {
+                //No cart token, add a new cart, get token, stote it and use it for adding to cart
                 const cartToken = await createCart();
                 if (cartToken?.token && !token) {
                     setToken(cartToken?.token || null);

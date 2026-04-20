@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/app/context/Cart/CartProvider';
 import { Product, StockData } from '../types';
 
-export function ProductActions({ product, id }: { product: Product; id: string }) {
+export function Stocks({ product, id }: { product: Product; id: string }) {
   const [quantity, setQuantity] = useState<number | undefined>(1);
   const [stockData, setStockData] = useState<StockData | null>(null);
   const [stockLoading, setStockLoading] = useState(true);
@@ -57,8 +57,8 @@ export function ProductActions({ product, id }: { product: Product; id: string }
     }
 
     setStatus('adding');
-    const result = await addToCart(product.id, quantity || 1);
-    
+    const result = await addToCart(product?.id, quantity || 1);
+
     if (result.success) {
       setStatus('success');
       await fetchCart();
@@ -72,7 +72,6 @@ export function ProductActions({ product, id }: { product: Product; id: string }
 
   return (
     <div className="flex flex-col gap-6 mt-6 pt-6 border-t border-gray-100">
-      {/* Stock Status Indicator */}
       <div className="flex items-center gap-4">
         {stockLoading ? (
           <div className="h-5 w-40 bg-zinc-100 animate-pulse rounded-full"></div>
@@ -86,7 +85,6 @@ export function ProductActions({ product, id }: { product: Product; id: string }
         )}
       </div>
 
-      {/* Quantity Selector */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-bold uppercase text-gray-400">Quantity</label>
         <input
@@ -99,18 +97,16 @@ export function ProductActions({ product, id }: { product: Product; id: string }
         />
       </div>
 
-      {/* Action Button */}
       <button
         onClick={handleAdd}
         disabled={isOutOfStock || stockLoading || status === 'adding'}
-        className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-[0.25em] transition-all transform active:scale-95 text-sm ${
-          isOutOfStock || stockLoading
+        className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-[0.25em] transition-all transform active:scale-95 text-sm ${isOutOfStock || stockLoading
             ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed border-2 border-zinc-200'
             : 'bg-black text-white hover:bg-zinc-800 shadow-2xl hover:shadow-black/20'
-        }`}
+          }`}
       >
         {status === 'adding' ? 'Processing...' : status === 'success' ? 'Added!' :
-          `Add to Cart — $${(product.price * (Number(quantity) || 1)).toFixed(2)}`}
+          `Add to Cart — $${(product?.price * (Number(quantity) || 1)).toFixed(2)}`}
       </button>
 
       {status === 'error' && (

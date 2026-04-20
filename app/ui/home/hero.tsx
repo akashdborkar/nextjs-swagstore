@@ -40,13 +40,11 @@ export default function Hero() {
 
         {/* Right Content: Visual Element */}
         <div className="flex-1 w-full relative group">
-          {/* Decorative background elements to help blend */}
           <div className="absolute -inset-4 bg-gradient-to-tr from-gray-100 to-transparent rounded-[4rem] -z-10 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-          
           <div className="relative aspect-square w-full bg-white rounded-[3.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden flex items-center justify-center p-0 transition-all duration-700 ease-out group-hover:shadow-[0_48px_80px_-16px_rgba(0,0,0,0.15)] group-hover:-translate-y-2 border border-gray-50">
-            <Image 
-              src={swagimg} 
-              alt="Swag Store Illustration" 
+            <Image
+              src={swagimg}
+              alt="Swag Store Illustration"
               className="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-105"
               style={{
                 maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
@@ -54,11 +52,9 @@ export default function Hero() {
               }}
               loading='eager'
             />
-            {/* Subtle overlay for depth */}
             <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent pointer-events-none" />
           </div>
         </div>
-      
       </div>
     </section>
   );

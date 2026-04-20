@@ -11,12 +11,12 @@ export default function Header() {
 
   // Initial fetch on mount or when token becomes available
   useEffect(() => {
-    if (token) {
+    if (token && !cart) {
       fetchCart();
     }
   }, [token]);
 
-  // Keep the local count state in sync with the cart object from context
+  // Keep the count in sync with the cart object from context
   useEffect(() => {
     if (cart) {
       setCartItemCount(cart?.totalItems);
@@ -24,13 +24,6 @@ export default function Header() {
       setCartItemCount(0);
     }
   }, [cart]);
-
-  // Handle manual fetch when clicking the bag icon to ensure data is fresh on the cart page
-  const handleCartClick = () => {
-    if (token) {
-      fetchCart();
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 font-sans">
@@ -66,7 +59,6 @@ export default function Header() {
         <div className="relative">
           <Link
             href="/cart"
-            onClick={handleCartClick}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#c9a7db] transition-colors"
           >
             <svg

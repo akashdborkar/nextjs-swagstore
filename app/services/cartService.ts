@@ -11,7 +11,7 @@ export async function createCart(): Promise<{ success: boolean; token?: string |
             'content-type': 'application/json',
             'x-vercel-protection-bypass': bypassToken,
         },
-        cache: 'no-cache',
+        cache: 'no-store'
     });
     if (!response.ok) throw new Error('Failed to create cart');
 
@@ -75,6 +75,7 @@ export async function updateCartItemQuantity(cartToken: string, itemId: string, 
             'x-cart-token': cartToken,
             'x-vercel-protection-bypass': bypassToken,
         },
+        cache: 'no-store',
         body: JSON.stringify({ quantity }),
     });
 

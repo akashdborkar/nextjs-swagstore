@@ -1,7 +1,12 @@
 export interface Category {
-    slug: string;
-    name: string;
-    productCount: number;
+  slug: string;
+  name: string;
+  productCount: number;
+}
+
+export interface PromoProps {
+  message: string;
+  discountCode?: string;
 }
 
 export interface Product {
@@ -26,20 +31,31 @@ export interface StockData {
 }
 
 export interface CartItem {
-    addedAt: string;
-    lineTotal: number;
-    product: Product;
-    price: number;
-    quantity: number;
-    totalPrice: number;
+  addedAt: string;
+  lineTotal: number;
+  product: Product;
+  price: number;
+  quantity: number;
+  totalPrice: number;
 }
 
 export interface CartModel {
-    createdAt: string;
-    currency: string;
-    items: CartItem[];
-    subtotal: number;
-    token: string;
-    totalItems: number;
-    updatedAt: string;
+  createdAt: string;
+  currency: string;
+  items: CartItem[];
+  subtotal: number;
+  token: string;
+  totalItems: number;
+  updatedAt: string;
+}
+
+export interface Error {
+  code: string,
+  message: string
+};
+
+export interface ProductResponse {
+  data?: Product,
+  success: boolean,
+  error?: Error
 }

@@ -21,7 +21,6 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Center/Right Section: Links and Copyright */}
         <div className="flex flex-col items-center md:items-end gap-3">
           <div className="text-sm text-gray-500 font-medium">
             © {currentYear} Swag Store. All rights reserved.

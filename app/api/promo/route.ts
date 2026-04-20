@@ -11,7 +11,7 @@ export async function GET(request: Request) {
                 'x-vercel-protection-bypass': bypassToken,
                 'Content-Type': 'application/json'
             },
-            // Cache the result for 60 seconds to reduce load and improve performance
+            // Cache the result for 5min
             next: { revalidate: 300 }
         });
 

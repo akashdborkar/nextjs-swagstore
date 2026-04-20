@@ -11,7 +11,7 @@ export function Search() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Extract current values directly from URL
+  // Extract query string values from URL
   const query = searchParams.get('search') || '';
   const category = searchParams.get('category') || 'all';
 
@@ -21,7 +21,6 @@ export function Search() {
   const [error, setError] = useState<string | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Sync internal input field if URL changes (e.g. back button)
   useEffect(() => {
     setInputValue(query);
   }, [query]);
@@ -56,7 +55,7 @@ export function Search() {
         apiParams.set('limit', '5');
       }
       if (cat !== 'all') apiParams.set('category', cat);
-      if (!q.trim() && cat === 'all') apiParams.set('featured', 'true');
+      if (!q.trim() && !cat.trim()) apiParams.set('featured', 'true');
 
       const response = await fetch(`/api/search?${apiParams.toString()}`);
       if (!response.ok) throw new Error(`Error: ${response.status}`);

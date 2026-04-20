@@ -10,7 +10,7 @@ export interface ProductsResponse {
 
   const fetchProducts = async (): Promise<ProductsResponse> => {
 
-    const response = await fetch('https://vercel-swag-store-api.vercel.app/api/products?page=1&limit=6', {
+    const response = await fetch('https://vercel-swag-store-api.vercel.app/api/products?page=1&limit=6&featured=true', {
       headers: { 'x-vercel-protection-bypass': process.env.VERCEL_SECRET_TOKEN || '' },
       next: { revalidate: 3600 } // Cache for 1 hour
     });

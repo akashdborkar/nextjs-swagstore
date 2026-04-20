@@ -10,7 +10,8 @@ export async function GET(request: Request) {
       headers: {
         'x-vercel-protection-bypass': bypassToken,
         'Content-Type': 'application/json'
-      }
+      },
+      next: { revalidate: 3600 }
     });
 
     if (!response.ok) {
@@ -18,8 +19,6 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json();
-    
-    // 5. Return the data to the client
     return NextResponse.json(data);
   } catch (error) {
     console.error("API Proxy Error:", error);

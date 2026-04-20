@@ -1,66 +1,63 @@
 import ProductClient from '@/app/ui/products/product';
+import { ProductResponse } from '@/app/ui/types';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-async function getProduct(id: string) {
+async function getProduct(id: string): Promise<ProductResponse> {
   const bypassToken = process.env.VERCEL_PROTECTION_BYPASS || '';
-  
   try {
     const response = await fetch(`https://vercel-swag-store-api.vercel.app/api/products/${id}`, {
       headers: {
         'x-vercel-protection-bypass': bypassToken,
         'Content-Type': 'application/json',
       },
-      // You can adjust caching behavior here based on your needs
-      cache: 'no-store' 
+      next: { revalidate: 3600 }
     });
-    
-    const json = await response.json();
-    if (json.success && json.data) {
-      return json.data;
-    }
-    return null;
+
+    return await response.json();
   } catch (error) {
-    console.error("Server fetch error:", error);
-    return null;
+    console.error("Server product fetch error:", error);
+    return { success: false };
   }
 }
 
-// 1. Dynamic Metadata Generation
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const product = await getProduct(id);
 
+  if (!product.success || !product.data || product.error?.code === "NOT_FOUND") {
+    notFound(); 
+  }
+
+  const data = product.data!;
+
   return {
-    title: `${product.name}`,
-    description: product.description,
+    title: data.name,
+    description: data.description,
     openGraph: {
-      title: product.name,
-      description: product.description,
-      images: product.images && product.images.length > 0 ? [product.images[0]] : [],
+      title: data.name,
+      description: data.description,
+      images: data.images?.length > 0 ? [data.images[0]] : [],
     },
     twitter: {
-      card: 'summary_large_image',
-      title: product.name,
-      description: product.description,
-      images: product.images && product.images.length > 0 ? [product.images[0]] : [],
-    }
+    card: 'summary',
+    title: data.name,
+    description: data.description,
+  }
   };
 }
 
-// 2. Server Component Page
 export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
-  
   const product = await getProduct(id);
 
-  if (!product) {
-    return <div className="p-20 text-center font-sans text-lg font-bold">Product not found.</div>;
+  if (!product.success || !product.data || product.error?.code === "NOT_FOUND") {
+    notFound();
   }
 
-  // Pass the pre-fetched data to the interactive Client Component
-  return <ProductClient product={product} id={id} />;
+  return <ProductClient product={product.data} id={id} />;
 }

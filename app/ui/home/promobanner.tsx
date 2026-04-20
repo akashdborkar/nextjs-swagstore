@@ -1,36 +1,33 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { PromoProps } from '../types';
 
-interface PromoProps {
-  message: string;
-  discountCode?: string;
-}
 
 export default function PromoBanner() {
   const [isVisible, setIsVisible] = useState(true);
   const [promo, setPromo] = useState<PromoProps>({} as PromoProps);
 
   useEffect(() => {
-  const fetchPromo = async () => {
-    const response = await fetch(`/api/promo`);
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} failed to fetch promo`);
-    }
-    const data = await response.json();
-    const promoItem = Array.isArray(data) ? data[0] : data;
+    const fetchPromo = async () => {
+      const response = await fetch(`/api/promo`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} failed to fetch promo`);
+      }
+      const data = await response.json();
+      const promoItem = Array.isArray(data) ? data[0] : data;
 
-    if (!promoItem || promoItem.data.active === false) {
-      console.log("No active promotion found.");
-    }
-    const promoData = {
-      message: promoItem.data.title || "Special Promotion!",
-      discountCode: promoItem.data.code,
+      if (!promoItem || promoItem.data.active === false) {
+        console.log("No active promotion found.");
+      }
+      const promoData = {
+        message: promoItem.data.title || "Special Promotion!",
+        discountCode: promoItem.data.code,
+      };
+      setPromo(promoData);
     };
-    setPromo(promoData);
-  };
 
-  fetchPromo();
-}, []);
+    fetchPromo();
+  }, []);
 
   if (!isVisible || !promo) {
     return null;
@@ -54,8 +51,7 @@ export default function PromoBanner() {
       <button
         onClick={() => setIsVisible(false)}
         className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/20 rounded-full transition-colors text-white/70 hover:text-white"
-        aria-label="Close promotion"
-      >
+        aria-label="Close promotion">
         <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
