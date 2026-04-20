@@ -108,7 +108,6 @@ export function Stocks({ product, id }: { product: Product; id: string }) {
         {status === 'adding' ? 'Processing...' : status === 'success' ? 'Added!' :
           `Add to Cart — $${(product?.price * (Number(quantity) || 1)).toFixed(2)}`}
       </button>
-
       {status === 'error' && (
         <p className="text-red-500 text-xs mt-3 text-center font-bold italic">Something went wrong. Please try again.</p>
       )}

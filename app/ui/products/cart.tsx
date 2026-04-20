@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Trash2, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
+import { Trash2, ShoppingBag, ArrowLeft, Loader2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/app/context/Cart/CartProvider';
 import Image from 'next/image';
 import { CartQuantityUpdate } from './cart-quantity-update';
@@ -65,19 +65,28 @@ export function CartClient() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-16 font-sans antialiased text-black">
-      <h1 className="text-5xl font-black uppercase italic tracking-tighter leading-none mb-12">Your Bag</h1>
-
+      <div className="flex flex-row justify-between items-center mb-12">
+        <h1 className="text-5xl font-black uppercase italic tracking-tighter leading-none">
+          Your Bag
+        </h1>
+        <Link
+          href="/search"
+          className="inline-flex items-center gap-3 bg-black text-white px-28 h-[3rem] rounded-full font-bold uppercase tracking-widest text-[12px] hover:bg-zinc-800 transition-all active:scale-95 shadow-lg shadow-black/5">
+          Add More Items <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
         <div className="lg:col-span-8 space-y-10">
           {items.map((item) => (
-            <div key={item.product.id} className={`flex flex-col sm:flex-row gap-8 pb-10 border-b border-zinc-100 group ${isUpdating ? 'opacity-50' : 'opacity-100'}`}>
+            <div key={item.product.id} className={`flex flex-col sm:flex-row gap-8 pb-10 border-b border-zinc-300 group ${isUpdating ? 'opacity-50' : 'opacity-100'}`}>
               <div className="w-full sm:w-40 h-48 sm:h-48 bg-zinc-50 border border-zinc-100 rounded-3xl overflow-hidden flex-shrink-0 relative">
-                <Image 
-                  src={item.product.images?.[0]} 
-                  alt={item.product.name} 
+                <Image
+                  src={item.product.images?.[0]}
+                  alt={item.product.name}
                   fill
+                  loading='eager'
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
                 />
               </div>
 
@@ -88,11 +97,12 @@ export function CartClient() {
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
-                
+
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-auto mt-1">{item.product.category}</p>
-                
+                <h4 className="text-xl font-black tabular-nums">Per Unit: ${item.product.price}</h4>
+
                 <div className="flex flex-wrap justify-between items-end gap-4 mt-8">
-                  <CartQuantityUpdate 
+                  <CartQuantityUpdate
                     productId={item.product.id}
                     initialQuantity={item.quantity}
                     onUpdate={handleUpdateQuantity}
@@ -107,7 +117,7 @@ export function CartClient() {
           ))}
         </div>
 
-         <div className="lg:col-span-4 lg:sticky lg:top-12">
+        <div className="lg:col-span-4 lg:sticky lg:top-12">
           <div className="bg-zinc-950 text-white rounded-[2.5rem] p-10 shadow-2xl shadow-zinc-200">
             <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-10">Checkout Details</h2>
 
