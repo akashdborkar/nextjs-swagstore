@@ -1,25 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '../types';
+import { getFeatureProducts } from '@/app/services/productService';
 
-export interface ProductsResponse {
-    success?: boolean;
-    data: Product[];
-    meta?: any;
-}
-
-  const fetchProducts = async (): Promise<ProductsResponse> => {
-
-    const response = await fetch('https://vercel-swag-store-api.vercel.app/api/products?page=1&limit=6&featured=true', {
-      headers: { 'x-vercel-protection-bypass': process.env.VERCEL_SECRET_TOKEN || '' },
-      next: { revalidate: 3600 } // Cache for 1 hour
-    });
-    return response.json();
-  };
-
-  const featureProducts = await fetchProducts();
-
-export default function FeaturedProducts() {
+export default async function FeaturedProducts() {
+    const featureProducts = await getFeatureProducts();
     const products = Array.isArray(featureProducts.data) ? featureProducts.data : [];
 
     if (!products || products.length === 0) {

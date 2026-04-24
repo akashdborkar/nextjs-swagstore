@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { CartQuantityUpdate } from './cart-quantity-update';
 import Link from 'next/link';
 
-export function CartClient() {
+export function Cart() {
   const { cart, loading, updateQuantity, removeItem, token, fetchCart } = useCart();
   const [isUpdating, setIsUpdating] = useState(false);
 

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { CartClient } from "../ui/products/cart";
+import { Cart } from "../ui/products/cart";
 
 const title = 'Your Shopping Bag';
 const description = 'Review your selected premium swag items and proceed to secure checkout.';
@@ -20,5 +20,5 @@ export const metadata: Metadata = {
 };
 
 export default function CartPage() {
-  return <CartClient />;
+  return <Cart />;
 }

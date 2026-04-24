@@ -23,7 +23,7 @@ export interface Product {
   tags: string[];
 }
 
-export interface StockData {
+export interface Stock {
   productId: string;
   stock: number;
   inStock: boolean;
@@ -58,4 +58,15 @@ export interface ProductResponse {
   data?: Product,
   success: boolean,
   error?: Error
+}
+
+export interface ProductsResponse {
+    success?: boolean;
+    data?: Product[];
+    meta?: any;
+}
+
+export interface StockResponse {
+  data?: Stock,
+  success: boolean,
 }

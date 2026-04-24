@@ -1,14 +1,17 @@
 import Image from 'next/image';
-import { Product } from '../types';
+import { Product, Stock } from '../types';
 import { Stocks } from './stock';
 import { Suspense } from 'react';
+import { getStock } from '@/app/services/productService';
 
 interface ProductClientProps {
   product?: Product;
   id: string;
 }
 
-export default function ProductClient({ product, id }: ProductClientProps) {
+export default async function ProductDetail({ product, id }: ProductClientProps) {
+const stock = (await getStock(id)).data as Stock;
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-12 font-sans">
 
@@ -32,7 +35,7 @@ export default function ProductClient({ product, id }: ProductClientProps) {
           <p className="text-2xl text-gray-600">${product?.price.toFixed(2)}</p>
           <p className="text-gray-500 leading-relaxed">{product?.description}</p>
           <Suspense fallback={<p>Fetching stock availability...</p>}>
-            <Stocks product={product} id={id} />
+            <Stocks product={product} id={id} stock={stock} />
           </Suspense>
         </div>}
     </main>
