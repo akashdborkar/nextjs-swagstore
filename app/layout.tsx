@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "./ui/header";
 import Footer from "./ui/footer";
 import { CartProvider } from "./context/Cart/CartProvider";
+import { HeaderSkeleton } from "./ui/skeletons";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,10 +38,14 @@ export default function RootLayout({
       {/* <body className="min-h-full flex flex-col">{children}</body> */}
       <body className="min-h-full flex flex-col">
         <CartProvider>
-          <Header />
+          <Suspense fallback={<HeaderSkeleton />}>
+            <Header />
+          </Suspense>
           <div className="min-h-full flex flex-col">{children}</div>
         </CartProvider>
-        <Footer />
+        <Suspense>
+          <Footer />
+        </Suspense>
       </body>
     </html>
   );

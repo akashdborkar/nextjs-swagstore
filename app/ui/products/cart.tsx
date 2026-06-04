@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Trash2, ShoppingBag, ArrowLeft, Loader2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/app/context/Cart/CartProvider';
 import Image from 'next/image';
 import { CartQuantityUpdate } from './cart-quantity-update';
 import Link from 'next/link';
+import { Trash2, ShoppingBag, ArrowLeft, Loader2, ArrowRight } from '@/app/ui/icons';
 
 export function Cart() {
   const { cart, loading, updateQuantity, removeItem, token, fetchCart } = useCart();

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Minus, Plus, RefreshCw } from 'lucide-react';
+import { Minus, Plus, RefreshCw } from '../icons';
 
 interface CartItemQuantityProps {
     productId: string;

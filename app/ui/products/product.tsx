@@ -9,9 +9,13 @@ interface ProductClientProps {
   id: string;
 }
 
-export default async function ProductDetail({ product, id }: ProductClientProps) {
-const stock = (await getStock(id)).data as Stock;
+async function StockSection({ product, id }: { product: Product; id: string }) {
+  const result = await getStock(id);
+  const stock = result.success !== false ? result.data as Stock : undefined;
+  return <Stocks product={product} id={id} stock={stock} />;
+}
 
+export default async function ProductDetail({ product, id }: ProductClientProps) {
   return (
     <main className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-12 font-sans">
 
@@ -28,14 +32,13 @@ const stock = (await getStock(id)).data as Stock;
         )}
       </div>
 
-      {/* Product Details & Actions */}
       {product &&
         <div className="flex-1 flex flex-col gap-6">
           <h1 className="text-4xl font-black uppercase italic">{product?.name}</h1>
           <p className="text-2xl text-gray-600">${product?.price.toFixed(2)}</p>
           <p className="text-gray-500 leading-relaxed">{product?.description}</p>
           <Suspense fallback={<p>Fetching stock availability...</p>}>
-            <Stocks product={product} id={id} stock={stock} />
+            <StockSection product={product} id={id} />
           </Suspense>
         </div>}
     </main>

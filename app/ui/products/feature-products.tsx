@@ -3,11 +3,25 @@ import Link from 'next/link';
 import { getFeatureProducts } from '@/app/services/productService';
 
 export default async function FeaturedProducts() {
-    const featureProducts = await getFeatureProducts();
-    const products = Array.isArray(featureProducts.data) ? featureProducts.data : [];
+    let products: Awaited<ReturnType<typeof getFeatureProducts>>['data'] = [];
+
+    try {
+        const featureProducts = await getFeatureProducts();
+        products = Array.isArray(featureProducts.data) ? featureProducts.data : [];
+    } catch {
+        return (
+            <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+                <p className="text-gray-500 text-center py-12">Featured products are temporarily unavailable.</p>
+            </section>
+        );
+    }
 
     if (!products || products.length === 0) {
-        return "Products not found, please try again later.";
+        return (
+            <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+                <p className="text-gray-500 text-center py-12">Products not found, please try again later.</p>
+            </section>
+        );
     }
 
     return (

@@ -1,37 +1,29 @@
-## Swag store 
-A branded online shop that allows employees, clients, or fans to explore and purchase curated company merchandise like apparel, tech accessories, and drinkware
+# Swag Store
 
-## The Swag store is deployed on Vercel
-Swag store vercel url [Swag Store](https://nextjs-swagstore.vercel.app/)
+A branded merchandise shop built with Next.js 16. Browse and purchase curated company swag — apparel, accessories, and drinkware.
 
-This project is a part of hands on practice implementing the learnings from Next Js.
-## Following concepts have been implemnetd through Swag store Next Js app
-- Layout & Pages
-- Css Styling, using tailwind
-- Navigating between pages i.e use of Next.Js Link, Image Optimizations
-- Fetching Data, API layers, Routes, Services
-- Implementing a Provider Context for sharing context, usage of useContext hook
-- Static & Dynamic Rendering, next js cache & revalidate
-- Suspense Boundaries, Search - Usage of usePath, useSearchParams and useRouter hooks
-- Handling Errors and not-found
-- Adding Metadata
+**Live:** [nextjs-swagstore.vercel.app](https://nextjs-swagstore.vercel.app/)
+
+## Stack
+
+Next.js 16 · TypeScript · Tailwind CSS · Vercel
 
 ## Getting Started
-First, run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-## Learn More
+Set `VERCEL_SECRET_TOKEN` in `.env.local` for the upstream API bypass header.
 
-To learn more about Next.js, take a look at the following resources:
+## Key Concepts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **`"use cache"` + named `cacheLife` profiles** — all data fetching uses Next.js 16's cache directive with six profiles (`products`, `featured`, `categories`, `promo`, `search`, `static`) configured in `next.config.ts`
+- **Partial prerendering** — `cacheComponents: true` with `<Suspense>` boundaries for streaming
+- **Server / Client split** — server components handle all fetching; client components (`Header`, `Stocks`, `PromoBannerClient`, `CartProvider`) are leaf nodes only
+- **Cache-safe error handling** — inner cached functions throw on errors (not cached); outer functions catch and return `null` gracefully
+- **Route Handlers as cached proxies** — `/api/search` and `/api/categories` cache upstream responses per query profile
+- **LCP optimisation** — hero image uses `priority` (`fetchpriority=high` + `<link rel="preload">`)
+- **`React.cache()`** — deduplicates `getProduct` between `generateMetadata` and page render within a single request
+- App Router, Suspense, `generateMetadata`, `cacheTag`, Context API, `next/image`, `next/font`

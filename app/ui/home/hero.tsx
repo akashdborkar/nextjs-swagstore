@@ -12,7 +12,7 @@ export default function Hero() {
           <div className="space-y-4">
             <h1 className="text-5xl md:text-7xl font-extrabold text-black tracking-tight leading-tight">
               Elevate Your <br />
-              <span className="text-gray-400">Everyday Swag.</span>
+              <span className="text-gray-500">Everyday Swag.</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 max-w-xl mx-auto lg:mx-0 font-medium">
               Discover a curated collection of premium essentials designed for modern living. Minimalist, functional, and uniquely you.
@@ -28,12 +28,12 @@ export default function Hero() {
           <div className="flex items-center justify-center lg:justify-start gap-8 pt-4">
             <div className="text-center">
               <p className="text-2xl font-bold text-black">10k+</p>
-              <p className="text-sm text-gray-400 uppercase font-semibold tracking-wider">Customers</p>
+              <p className="text-sm text-gray-500 uppercase font-semibold tracking-wider">Customers</p>
             </div>
             <div className="w-px h-10 bg-gray-200" />
             <div className="text-center">
               <p className="text-2xl font-bold text-black">24/7</p>
-              <p className="text-sm text-gray-400 uppercase font-semibold tracking-wider">Support</p>
+              <p className="text-sm text-gray-500 uppercase font-semibold tracking-wider">Support</p>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function Hero() {
                 maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
               }}
-              loading='eager'
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent pointer-events-none" />
           </div>

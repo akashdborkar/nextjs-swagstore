@@ -3,10 +3,18 @@ import { useState } from 'react';
 import { useCart } from '@/app/context/Cart/CartProvider';
 import { Product, Stock } from '../types';
 
-export function Stocks({ product, stock }: { product: Product; id: string; stock: Stock }) {
+export function Stocks({ product, stock }: { product: Product; id: string; stock: Stock | undefined }) {
   const [quantity, setQuantity] = useState<number>(1);
   const { addToCart, fetchCart } = useCart();
   const [status, setStatus] = useState<'adding' | 'success' | 'error' | null>(null);
+
+  if (stock === undefined) {
+    return (
+      <div className="flex flex-col gap-6 mt-6 pt-6 border-t border-gray-100">
+        <p className="text-sm text-gray-500 italic">Stock availability is currently unavailable. Please try again later.</p>
+      </div>
+    );
+  }
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
@@ -40,14 +48,14 @@ export function Stocks({ product, stock }: { product: Product; id: string; stock
     }
   };
 
-  const isOutOfStock = !stock?.inStock || stock?.stock === 0;
+  const isOutOfStock = !stock.inStock || stock.stock === 0;
 
   return (
     <div className="flex flex-col gap-6 mt-6 pt-6 border-t border-gray-100">
       <div className="flex items-center gap-4">
         <div className={`w-3.5 h-3.5 rounded-full ${isOutOfStock ? 'bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.4)]' : 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]'}`} />
-        <span className={`text-xs font-black uppercase tracking-[0.2em] ${isOutOfStock ? 'text-red-600' : 'text-green-700'} ${stock?.lowStock && !isOutOfStock ? 'text-yellow-600' : ''}`}>
-          {isOutOfStock ? 'Sold Out' : stock?.lowStock ? `Only ${stock.stock} Units Left` : 'In Stock & Ready'}
+        <span className={`text-xs font-black uppercase tracking-[0.2em] ${isOutOfStock ? 'text-red-600' : 'text-green-700'} ${stock.lowStock && !isOutOfStock ? 'text-yellow-600' : ''}`}>
+          {isOutOfStock ? 'Sold Out' : stock.lowStock ? `Only ${stock.stock} Units Left` : 'In Stock & Ready'}
         </span>
       </div>
 

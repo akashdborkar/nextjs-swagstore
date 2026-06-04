@@ -45,12 +45,12 @@ export default function Header() {
 
           <nav className="flex items-center gap-8">
             <Link href="/" className={`text-lg transition-colors hover:text-black 
-              ${pathname === '/' ? 'text-black font-semibold' : 'text-gray-600'}`}
+              ${pathname === '/' ? 'text-black font-semibold' : 'text-gray-800'}`}
             >Home
             </Link>
             <Link
               href="/search" className={`text-lg transition-colors hover:text-black 
-                ${pathname === '/search' ? 'text-black font-semibold' : 'text-gray-600'}`}
+                ${pathname === '/search' ? 'text-black font-semibold' : 'text-gray-800'}`}
             >Search
             </Link>
           </nav>
@@ -59,6 +59,7 @@ export default function Header() {
         <div className="relative">
           <Link
             href="/cart"
+            aria-label="View cart"
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#c9a7db] transition-colors"
           >
             <svg
