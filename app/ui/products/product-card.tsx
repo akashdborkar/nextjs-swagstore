@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">${product.price.toFixed(2)}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-black">${(product.price / 100).toFixed(2)}</span>
                     </div>
                 </div>
                 <div className="px-1">

@@ -99,7 +99,7 @@ export function Cart() {
                 </div>
 
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-auto mt-1">{item.product.category}</p>
-                <h4 className="text-xl font-black tabular-nums">Per Unit: ${item.product.price}</h4>
+                <h4 className="text-xl font-black tabular-nums">Per Unit: ${(item.product.price / 100).toFixed(2)}</h4>
 
                 <div className="flex flex-wrap justify-between items-end gap-4 mt-8">
                   <CartQuantityUpdate
@@ -109,7 +109,7 @@ export function Cart() {
                     disabled={isUpdating} />
                   <div className="text-right">
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-1">Item Total</p>
-                    <p className="text-2xl font-black tabular-nums">${(item.product.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-2xl font-black tabular-nums">${(item.product.price / 100 * item.quantity).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ export function Cart() {
             <div className="space-y-6 mb-10">
               <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
                 <span>Value</span>
-                <span className="text-white">${cart?.subtotal?.toFixed(2) || '0.00'}</span>
+                <span className="text-white">${cart?.subtotal ? (cart.subtotal / 100).toFixed(2) : '0.00'}</span>
               </div>
               <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
                 <span>Logistics</span>
@@ -134,7 +134,7 @@ export function Cart() {
               <div className="pt-10 border-t border-zinc-800 flex flex-col gap-2">
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">Total Amount</span>
                 <span className="text-5xl font-black tracking-tighter italic">
-                  ${cart?.subtotal?.toFixed(2) || '0.00'}
+                  ${cart?.subtotal ? (cart.subtotal / 100).toFixed(2) : '0.00'}
                 </span>
               </div>
             </div>

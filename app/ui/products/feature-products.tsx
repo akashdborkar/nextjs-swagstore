@@ -65,7 +65,7 @@ export default async function FeaturedProducts() {
                             </h3>
                             <div className="flex items-center justify-between mt-2">
                                 <span className="text-xl font-light text-gray-900">
-                                    ${product.price.toFixed(2)}
+                                    ${(product.price / 100).toFixed(2)}
                                 </span>
                             </div>
                         </div>

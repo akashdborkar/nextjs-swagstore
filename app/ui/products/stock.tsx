@@ -89,7 +89,7 @@ export function Stocks({ product, stock }: { product: Product; id: string; stock
         ) : isOutOfStock ? (
           'Currently Unavailable'
         ) : (
-          `Add to Cart — $${(product?.price * quantity).toFixed(2)}`
+          `Add to Cart — $${(product?.price / 100 * quantity).toFixed(2)}`
         )}
       </button>
 

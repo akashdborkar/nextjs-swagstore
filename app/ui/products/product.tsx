@@ -35,7 +35,7 @@ export default async function ProductDetail({ product, id }: ProductClientProps)
       {product &&
         <div className="flex-1 flex flex-col gap-6">
           <h1 className="text-4xl font-black uppercase italic">{product?.name}</h1>
-          <p className="text-2xl text-gray-600">${product?.price.toFixed(2)}</p>
+          <p className="text-2xl text-gray-600">${(product.price / 100).toFixed(2)}</p>
           <p className="text-gray-500 leading-relaxed">{product?.description}</p>
           <Suspense fallback={<p>Fetching stock availability...</p>}>
             <StockSection product={product} id={id} />
