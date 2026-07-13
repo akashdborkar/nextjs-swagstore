@@ -35,13 +35,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      {/* <body className="min-h-full flex flex-col">{children}</body> */}
       <body className="min-h-full flex flex-col">
         <CartProvider>
           <Suspense fallback={<HeaderSkeleton />}>
             <Header />
           </Suspense>
-          <div className="min-h-full flex flex-col">{children}</div>
+          <main className="min-h-full flex flex-col">{children}</main>
         </CartProvider>
         <Suspense>
           <Footer />
